@@ -1,0 +1,235 @@
+# Investment Agents — configuration. The investable universe is in config/universe.yaml.
+
+# ---------------------------------------------------------------- data agent
+history_start: "2005-01-01"   # first date of price history (covers the 2008 crisis for stress tests)
+min_history_years: 3          # assets with less history stay in the vault but are flagged
+download_batch: 100           # tickers per Yahoo Finance request
+base_currency: EUR            # account currency: all prices and returns are converted to it
+fundamentals:
+  sec_user_agent: "investment-agents research tool"   # the SEC asks for an identifier (e.g. "name email")
+  refresh_days: 7
+fred_series:                  # free FRED macro series (no API key)
+  DGS10: "10Y Treasury yield"
+  DGS2: "2Y Treasury yield"
+  CPIAUCSL: "CPI"
+  UNRATE: "US unemployment"
+  VIXCLS: "VIX"
+  BAMLH0A0HYM2: "High-yield spread"
+  BAMLC0A0CM: "Investment-grade spread"
+  T10Y2Y: "10Y-2Y curve"
+  T10YIE: "10Y breakeven inflation"
+  DFF: "Fed Funds"
+  DCOILWTICO: "WTI oil"
+  DEXUSEU: "USD per EUR"
+  INDPRO: "Industrial production"
+  NFCI: "Chicago Fed financial conditions"
+  ECBDFR: "ECB deposit rate"
+paths:
+  data: data
+  vault: vault                # Obsidian vault (any Markdown viewer works)
+
+# ---------------------------------------------------------------- news agent
+news:
+  # rss: Google News RSS headlines + Gemini classification (works on the free tier)
+  # search: Gemini with Google Search grounding (needs a paid plan) · auto: search, fall back to rss
+  mode: rss
+  model: gemini-3.8-flash
+  fallback_models: [gemini-3.5-flash, gemini-3.1-flash-lite]   # used if the main model is overloaded or retired
+  max_headlines_per_theme: 60
+  max_items_per_theme: 8
+  lookback_hours: 36
+  half_life_days: 3            # decay of a news item's weight in the signals
+  pause_seconds: 4             # pause between calls (free-tier rate limits)
+  themes:                      # desc guides Gemini, queries feed the RSS search
+    geopolitics:
+      desc: "wars and conflicts, sanctions, tariffs and trade policy, elections, US-China tensions, Middle East, Russia-Ukraine"
+      queries: ["geopolitics markets", "sanctions OR tariffs", "US China trade", "Middle East oil conflict", "Russia Ukraine"]
+    central_banks_macro:
+      desc: "Federal Reserve, ECB, Bank of Japan, inflation, jobs data, GDP, Treasury yields, credit spreads"
+      queries: ["Federal Reserve", "ECB interest rates", "Bank of Japan", "inflation CPI", "Treasury yields", "jobs report"]
+    tech_ai_semiconductors:
+      desc: "artificial intelligence, semiconductors, big tech, cloud, tech regulation, chip export controls"
+      queries: ["semiconductor stocks", "Nvidia OR TSMC OR ASML", "AI stocks", "chip export controls", "big tech antitrust"]
+    energy_commodities:
+      desc: "oil, OPEC, natural gas, gold, industrial metals, agriculture"
+      queries: ["oil prices OPEC", "natural gas prices", "gold price", "copper price", "wheat OR corn prices"]
+    europe_italy:
+      desc: "European markets, Borsa Italiana / FTSE MIB, BTP-Bund spread, European banks, EU politics"
+      queries: ["European stocks", "FTSE MIB OR Borsa Italiana", "BTP Bund spread", "European banks", "Eni OR Enel OR Intesa OR UniCredit OR Ferrari"]
+    asia_emerging:
+      desc: "China, Japan, India, South Korea, Taiwan, Latin America, emerging markets"
+      queries: ["China economy stocks", "Nikkei Japan stocks", "India stocks Sensex", "emerging markets", "Brazil Mexico markets"]
+    corporate_earnings:
+      desc: "quarterly earnings, guidance, M&A, analyst upgrades and downgrades of large listed companies"
+      queries: ["earnings beat OR miss", "guidance cut OR raise", "merger acquisition deal", "analyst upgrade OR downgrade"]
+    crypto:
+      desc: "Bitcoin, Ethereum, crypto regulation, crypto ETFs"
+      queries: ["Bitcoin price", "Ethereum", "crypto regulation SEC", "crypto ETF"]
+
+# Synthetic history before inception for recent "capital efficient" ETFs (legs + financing cost - fee).
+synthetic_history:
+  NTSX: {legs: {SPY: 0.9, IEF: 0.6}, cash: -0.5, fee: 0.0020}
+  NTSI: {legs: {EFA: 0.9, IEF: 0.6}, cash: -0.5, fee: 0.0026}
+  NTSE: {legs: {EEM: 0.9, IEF: 0.6}, cash: -0.5, fee: 0.0032}
+  RSSB: {legs: {VT: 1.0, IEF: 1.0}, cash: -1.0, fee: 0.0036}
+  RSST: {legs: {SPY: 1.0, DBMF: 1.0}, cash: -1.0, fee: 0.0099}
+  RSBT: {legs: {AGG: 1.0, DBMF: 1.0}, cash: -1.0, fee: 0.0099}
+  GDE: {legs: {SPY: 0.9, GLD: 0.9}, cash: -0.8, fee: 0.0020}
+
+# ---------------------------------------------------------------- portfolio agent
+# Effective limits = base values below -> risk profile (profiles.<risk_profile>) -> risk_mode.offense/defense.
+portfolio:
+  risk_profile: growth         # growth | balanced
+  profiles:
+    balanced: {}
+    growth:
+      class_caps: {equity: 0.70, equity_etf: 0.70, bond: 0.30, alternative: 0.15}
+      equity_total_cap: 0.85
+      region_caps: {US: 0.60}
+      risk: {vol_cap: 0.15, risk_budget: {equity_all: 0.85, crypto: 0.10, commodity: 0.30}, cvar_cap_daily: -0.028, cvar_cap_mc: -0.13}
+  capital: 5000                # capital in base currency (example value)
+  single_stocks_require_fundamentals: false  # true = single stocks only with SEC fundamentals (cost ~2 pts/yr in the 2008-2026 test)
+  fractional_shares: true
+  max_positions: 35            # max candidates; small positions are removed afterwards
+  min_position_value: 100      # positions below this amount are dropped
+  max_weight: 0.10             # max weight per asset
+  commission_per_trade: 1.0    # fixed cost per order (base currency)
+  cost_bps: 10                 # spread + slippage per trade, basis points
+  rebalance: quarterly         # monthly | quarterly
+  no_trade_band: 0.02          # no order if a weight changes by less than 2 points
+  hold_bonus: 0.5              # score bonus for assets already held (lower turnover)
+  lookback_days: 756           # 3 years of data for risk and correlation estimates
+  backtest_start: "2008-01-01"
+  min_dollar_volume: 1000000   # min median daily traded value (local currency)
+  exclude_groups: [volatility] # VIX ETFs decay over time: not suitable for buy and hold
+  # Caps per asset class (long-only stocks and ETFs, no derivatives)
+  class_caps: {equity: 0.45, equity_etf: 0.45, bond: 0.50, commodity: 0.20, real_estate: 0.10,
+               fx: 0.10, alternative: 0.25, crypto: 0.05, infrastructure: 0.10, capital_efficient: 0.40}
+  equity_total_cap: 0.65       # single stocks + equity ETFs together
+  region_caps: {US: 0.50, Italy: 0.15, Emerging: 0.15, AsiaPacific: 0.20, Europe: 0.30, Canada: 0.10}
+  methods: [equal_weight, max_sharpe, mean_variance, risk_parity, max_diversification, min_cvar]
+  hedge:                       # ETFs that historically gained or held up in crashes: minimum total weight
+    tickers: [DBMF, KMLM, CTA, WTMF, TAIL, BTAL, CAOS, SWAN, PFIX, RPAR, FMF, TLT, EDV, ZROZ, GLD, IAU, SGOL, FXY, FXF]
+    min_total: 0.10
+    min_total_bubble: 0.15     # minimum when the AI-bubble rule fires
+    per_class: 2               # hedge candidates guaranteed per asset class
+  ai_cap: 0.25                 # max weight of AI-related assets (list in ai_bubble.tickers)
+  ai_cap_bubble: 0.10          # cap when the AI-bubble rule fires
+  bubble:
+    etf: SMH                   # bubble thermometer: semiconductor ETF
+    ma_gap: 0.25               # bubble if price is 25% above its 200-day average
+    z_threshold: 2.0           # or if its 12-month return is > 2 standard deviations above its history
+  momentum_dampening:
+    vix: 25                    # if the 4-week average VIX exceeds 25
+    scale: 0.3                 # momentum weights drop to 30%; the rest goes to fundamental/quality factors
+  risk:
+    vol_cap: 0.14              # max annual portfolio volatility
+    risk_budget: {equity_all: 0.80, crypto: 0.10, commodity: 0.30}   # max share of total risk
+    cvar_cap_daily: -0.025     # historical daily CVaR 95% cap (used if MC scenarios are off)
+    cvar_cap_mc: -0.12         # CVaR 95% cap on the 3-month Monte Carlo scenarios
+  mc_selection:                # today: every method is simulated and rejected if too risky
+    n_paths: 200000
+    max_cvar95_1y: -0.20
+    max_prob_dd20_1y: 0.10
+  mc_scenarios:                # Heston scenarios drive the CVaR cap and the min_cvar method
+    enabled: true
+    n: 10000
+    weeks: 13
+  choose_by: multi_horizon     # mean Sharpe over 1, 2, 5 years and full period (or: sharpe, sortino, calmar)
+  ml_returns:                  # LightGBM expected returns in the optimiser (max_sharpe, mean_variance)
+    enabled: true
+    params:                    # chosen by tools/tune_ml.py (validation 2011-2013); 'auto' reads data/experiments/ml_params.json
+      num_leaves: 15
+      min_child_samples: 100
+      n_estimators: 150
+      learning_rate: 0.05
+      colsample_bytree: 0.7
+      subsample: 0.7
+      reg_lambda: 5.0
+      _options: {use_macro: false, demean: true}   # cross-sectional (relative) target, no macro features
+    blend: 1.0                 # share of the ML forecast in expected returns (chosen on 2008-2013)
+    gamma: 2.0                 # risk aversion of mean_variance (chosen on 2008-2013)
+    train_years: 10
+  covariance: dcc              # lw: Ledoit-Wolf · dcc: 50% Ledoit-Wolf + 50% DCC dynamic correlations
+  ml:
+    enabled: true              # walk-forward LightGBM on the factors: tilts the selection score
+    tilt: 0.5                  # 0 = factors only, 1 = model only
+  risk_mode:                   # offensive profile by default, defensive when warning signals fire
+    enabled: false             # off: calibrated on 2008-2016 it does not beat 'always offense' in 2017-2026
+    enter: 2                   # switch to defense with at least 2 signals on
+    exit_max: 1                # back to offense with at most 1 signal on...
+    exit_weeks: 3              # ...for 3 consecutive weeks
+    rebalance_on_switch: true
+    triggers:                  # set to null to disable a signal
+      hmm_crisis_prob: 0.5     # HMM crisis probability
+      vix: 25                  # 4-week average VIX
+      trend_ma_days: 200       # S&P 500 below its 200-day average
+      market_drawdown: -0.10   # S&P 500 more than 10% below its 12-month high
+      credit_z: 1.5            # credit stress (HYG vs IEF) above 1.5 standard deviations
+    offense:
+      equity_total_cap: 0.90
+      momentum_scale: 1.0
+      class_caps: {bond: 0.15}
+      ai_cap: 0.35
+      hedge: {min_total: 0.05, min_total_bubble: 0.10}
+      risk: {vol_cap: 0.18, cvar_cap_daily: -0.035, cvar_cap_mc: -0.16, risk_budget: {equity_all: 0.92, crypto: 0.10, commodity: 0.30}}
+      ml: {enabled: true, tilt: 0.7}
+    defense:
+      equity_total_cap: 0.45
+      momentum_scale: 0.3
+      class_caps: {bond: 0.50}
+      ai_cap: 0.10
+      hedge: {min_total: 0.25, min_total_bubble: 0.30}
+      risk: {vol_cap: 0.10, cvar_cap_daily: -0.018, cvar_cap_mc: -0.09, risk_budget: {equity_all: 0.60, crypto: 0.05, commodity: 0.30}}
+      ml: {enabled: true, tilt: 0.5}
+  selection_model: adaptive    # adaptive: factor weights from past IC · static: fixed weights
+  news_tilt: 0.25              # how much news moves the selection score (0 = ignore)
+
+# ---------------------------------------------------------------- modeling agent
+modeling:
+  cflib_path: null             # optional folder with an external CFLib-compatible package; null = built-in sde.py
+  n_paths: 1000000
+  batch: 50000                 # paths per batch on the 1-year horizon (limits RAM)
+  workers: 4                   # parallel processes
+  horizons_years: [1, 5]
+  steps_per_year: 52           # weekly step
+  seed: 42
+  factors: [SPY, VGK, EEM, EWJ, HYG, GLD, DBC, BTC-USD]   # price factors (in EUR), Heston dynamics
+  rate_factor: DGS10           # 10-year Treasury yield, CIR dynamics
+  drift_shrink: 0.5            # expected return = risk-free rate + 50% of the historical premium
+  jumps:                       # Merton jumps on equity factors
+    equity_factors: [SPY, VGK, EEM, EWJ]
+    intensity: 0.5
+    mean: -0.06
+    std: 0.05
+  crisis_vix: 25               # weeks above this VIX level are "crisis regime"
+  calibration_years: 12
+  stress_historical:
+    gfc_2008: ["2008-09-12", "2009-03-09"]
+    momentum_crash_2009: ["2009-03-09", "2009-06-01"]
+    euro_debt_2011: ["2011-07-01", "2011-10-04"]
+    q4_2018: ["2018-09-28", "2018-12-24"]
+    covid_2020: ["2020-02-19", "2020-03-23"]
+    inflation_rates_2022: ["2022-01-03", "2022-10-12"]
+  stress_hypothetical:         # factor shocks (EUR returns; RATE = change of the 10-year yield)
+    ai_bubble_burst: {SPY: -0.28, VGK: -0.15, EEM: -0.20, EWJ: -0.20, HYG: -0.08, GLD: 0.08, DBC: -0.10, BTC-USD: -0.50, RATE: -0.0075, ai_extra: -0.30}
+    rate_shock: {SPY: -0.12, VGK: -0.12, EEM: -0.15, EWJ: -0.10, HYG: -0.08, GLD: -0.05, DBC: 0.0, BTC-USD: -0.25, RATE: 0.02}
+    oil_geopolitical_shock: {SPY: -0.10, VGK: -0.15, EEM: -0.12, EWJ: -0.12, HYG: -0.05, GLD: 0.10, DBC: 0.35, BTC-USD: -0.15, RATE: 0.005}
+ai_bubble:
+  tickers: [NVDA, AMD, AVGO, TSM, ASML, ASML.AS, SMH, SOXX, MSFT, GOOGL, GOOG, META, AMZN, ORCL, PLTR, MU, ARM, SMCI, AMAT, LRCX, KLAC, MRVL, CRWD, NOW, SNOW, ANET, VRT, IFX.DE, 8035.T, 6857.T, 000660.KS, 005930.KS, BOTZ, AIQ, CIBR, XLK, QQQ, IGV]
+
+# ---------------------------------------------------------------- controller agent
+controller:
+  hard:                        # any breach -> BLOCKED (the last approved portfolio stays active)
+    max_cvar95_1y: -0.22
+    max_prob_dd20_1y: 0.12
+    max_stress_loss:
+      gfc_2008: -0.35
+      covid_2020: -0.30
+    max_hypothetical_loss: -0.20
+    block_on_violations: true
+    max_single_weight: 0.12
+  soft:                        # any breach -> APPROVED WITH WARNINGS
+    max_turnover: 0.80
+    max_prob_underperform_spy_1y: 0.70
+    news: {min_impact: 4, max_sentiment: -0.5, max_weight_affected: 0.08}

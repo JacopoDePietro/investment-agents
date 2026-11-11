@@ -1,0 +1,15 @@
+# environment and secrets
+.venv/
+.env
+# generated data, logs and notes
+data/
+logs/
+vault/*
+!vault/.gitkeep
+# python / OS / editors
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+.vscode/
+.idea/

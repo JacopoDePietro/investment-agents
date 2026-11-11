@@ -1,0 +1,256 @@
+# Diversified universe. Each group has an asset_class and a region, used by the
+# portfolio and controller agents for concentration limits.
+dynamic:
+  sp500:            # ~500 US stocks downloaded automatically with GICS sector
+    enabled: true
+    asset_class: equity
+    region: US
+
+static:
+  # ───────────────────────────── US EQUITIES OUTSIDE THE S&P 500 ─────────────────────────────
+  us_equity_growth_extra:   # widely followed US-listed large/mid caps not in the S&P 500
+    asset_class: equity
+    region: US
+    tickers: [ARM, MRVL, SNOW, NET, MDB, ZS, TEAM, HUBS, OKTA, TWLO, SHOP, SPOT, MSTR, SOFI,
+              AFRM, UPST, RIVN, LCID, RKLB, ASTS, IONQ, RGTI, CELH, DUOL, ONON, BIRK, CAVA, TOST,
+              DKNG, RDDT, NBIS, CRWV, CRCL, OKLO, SMR, ALAB, CRDO, VRT, CCJ, SCCO, MARA, RIOT,
+              CLSK, GTLB, PATH, U, ROKU, PINS, SNAP, DOCU, ZM, ESTC, S, IOT, BILL, ENPH,
+              FSLR, RUN, CHWY, ETSY, W, LYFT, GME, TTD, SE, GRAB, CPNG, ASML, NVO, SONY, TM, UL]
+
+  # ─────────────────────────────────── EUROPEAN EQUITIES ───────────────────────────────────
+  europe_equity:
+    asset_class: equity
+    region: Europe
+    tickers: [ASML.AS, SAP.DE, SIE.DE, ALV.DE, DTE.DE, MBG.DE, BMW.DE, BAS.DE, IFX.DE, MUV2.DE,
+              MC.PA, OR.PA, TTE.PA, SAN.PA, AIR.PA, BNP.PA, SU.PA, RMS.PA, AI.PA, EL.PA,
+              NESN.SW, NOVN.SW, ROG.SW, UBSG.SW, ZURN.SW, ABBN.SW,       # Roche
+              SHEL.L, AZN.L, HSBA.L, ULVR.L, BP.L, GSK.L, RIO.L, DGE.L, BATS.L, LSEG.L,
+              NOVO-B.CO, INGA.AS, ADYEN.AS, IBE.MC, SAN.MC, ITX.MC, BBVA.MC, VOLV-B.ST, ATCO-A.ST, EQNR.OL]
+  germany_equity_extra:
+    asset_class: equity
+    region: Europe
+    tickers: [DB1.DE, DBK.DE, CBK.DE, RWE.DE, EOAN.DE, ADS.DE, VOW3.DE, P911.DE, DHL.DE, HEN3.DE,
+              MRK.DE, BAYN.DE, RHM.DE, MTX.DE, HNR1.DE, ENR.DE, SY1.DE, BEI.DE, VNA.DE, ZAL.DE,
+              HEI.DE, CON.DE, FRE.DE, SHL.DE, QIA.DE, HAG.DE, R3NK.DE]
+  france_benelux_equity_extra:
+    asset_class: equity
+    region: Europe
+    tickers: [CS.PA, KER.PA, DG.PA, SAF.PA, HO.PA, CAP.PA, ACA.PA, GLE.PA, VIE.PA, ENGI.PA,
+              RI.PA, ORA.PA, ML.PA, DSY.PA, PUB.PA, SGO.PA, CA.PA, BN.PA, AM.PA, ERF.PA, LR.PA, STMPA.PA,
+              PRX.AS, HEIA.AS, PHIA.AS, AD.AS, WKL.AS, ASM.AS, BESI.AS, UMG.AS, ABN.AS, NN.AS, EXO.AS,
+              ABI.BR, KBC.BR, UCB.BR, ARGX.BR, SOLB.BR]
+  switzerland_uk_equity_extra:
+    asset_class: equity
+    region: Europe
+    tickers: [CFR.SW, LONN.SW, SIKA.SW, GIVN.SW, HOLN.SW, ALC.SW, PGHN.SW, SREN.SW, GEBN.SW,
+              SCMN.SW, LOGN.SW, SLHN.SW, KNIN.SW, SCHP.SW, STMN.SW,
+              REL.L, LLOY.L, BARC.L, NWG.L, STAN.L, PRU.L, LGEN.L, AV.L, GLEN.L, AAL.L, NG.L, SSE.L,
+              VOD.L, BT-A.L, TSCO.L, CPG.L, EXPN.L, RR.L, BA.L, IMB.L, RKT.L, HLN.L, III.L, AHT.L,
+              SGE.L, WPP.L, IHG.L, BNZL.L, NXT.L, ANTO.L, FRES.L]
+  nordics_equity_extra:
+    asset_class: equity
+    region: Europe
+    tickers: [DSV.CO, MAERSK-B.CO, ORSTED.CO, VWS.CO, CARL-B.CO, COLO-B.CO, GMAB.CO, NSIS-B.CO,
+              NOKIA.HE, NESTE.HE, KNEBV.HE, SAMPO.HE, NDA-FI.HE, UPM.HE,
+              ERIC-B.ST, INVE-B.ST, SEB-A.ST, SHB-A.ST, SWED-A.ST, HM-B.ST, ASSA-B.ST, SAND.ST,
+              EVO.ST, ESSITY-B.ST, SAAB-B.ST, EPI-A.ST,
+              DNB.OL, NHY.OL, ORK.OL, TEL.OL, MOWI.OL, AKRBP.OL, YAR.OL, KOG.OL]
+  south_east_europe_equity_extra:
+    asset_class: equity
+    region: Europe
+    tickers: [TEF.MC, REP.MC, CABK.MC, AMS.MC, AENA.MC, CLNX.MC, ELE.MC, NTGY.MC, GRF.MC, ACS.MC,
+              MAP.MC, SAB.MC, IAG.MC, FER.MC,
+              EDP.LS, GALP.LS, JMT.LS, OMV.VI, EBS.VI, VER.VI, RYA.IR,
+              PKO.WA, PZU.WA, PKN.WA, CDR.WA]
+
+  # ─────────────────────────────────── ITALIAN EQUITIES ───────────────────────────────────
+  italy_equity:
+    asset_class: equity
+    region: Italy
+    tickers: [ENI.MI, ENEL.MI, ISP.MI, UCG.MI, RACE.MI, STLAM.MI, G.MI, STMMI.MI, TIT.MI, PRY.MI,
+              MONC.MI, LDO.MI, TRN.MI, SRG.MI, MB.MI, BAMI.MI, PST.MI, CPR.MI, AMP.MI, REC.MI,
+              FBK.MI, TEN.MI, HER.MI, A2A.MI, BMED.MI, INW.MI, NEXI.MI, DIA.MI, BPE.MI, IG.MI]
+  italy_equity_extra:       # rest of FTSE MIB + most liquid mid caps
+    asset_class: equity
+    region: Italy
+    tickers: [AZM.MI, BGN.MI, BC.MI, BZU.MI, ERG.MI, IP.MI, LTMC.MI, SPM.MI, IVG.MI, UNI.MI,
+              PIRC.MI, BMPS.MI, CE.MI, ENAV.MI, IRE.MI, ACE.MI, WBD.MI, SOL.MI, REY.MI, DLG.MI,
+              MAIRE.MI, BFF.MI, FCT.MI, AVIO.MI, DAN.MI, BRE.MI, TGYM.MI, SES.MI, ELN.MI, IF.MI,
+              MFEB.MI, OVS.MI, SFER.MI, MARR.MI]
+
+  # ──────────────────────────────── ASIA / PACIFIC EQUITIES ────────────────────────────────
+  asia_pacific_equity:
+    asset_class: equity
+    region: AsiaPacific
+    tickers: [7203.T, 6758.T, 8306.T, 9984.T, 6861.T, 9432.T, 8035.T, 6501.T, 7974.T, 4063.T,
+              0700.HK, 9988.HK, 1299.HK, 0005.HK, 3690.HK, 0941.HK, 1810.HK,
+              TSM, 005930.KS, 000660.KS, BHP.AX, CBA.AX, CSL.AX, WBC.AX,
+              INFY, HDB, IBN, RELIANCE.NS, TCS.NS, D05.SI]
+  japan_equity_extra:
+    asset_class: equity
+    region: AsiaPacific
+    tickers: [6098.T, 8058.T, 8001.T, 8031.T, 8053.T, 6367.T, 4568.T, 4502.T, 6902.T, 7267.T,
+              7741.T, 6981.T, 6954.T, 6273.T, 9983.T, 8316.T, 8411.T, 8766.T, 6503.T, 7011.T,
+              6146.T, 6857.T, 4519.T, 2914.T, 9433.T, 4661.T, 6762.T, 6702.T, 7751.T, 8591.T]
+  china_hk_equity_extra:
+    asset_class: equity
+    region: AsiaPacific
+    tickers: [1211.HK, 2318.HK, 0388.HK, 0883.HK, 0939.HK, 1398.HK, 3988.HK, 2020.HK, 9618.HK,
+              9999.HK, 1024.HK, 2269.HK, 0027.HK, 0016.HK, 0001.HK, 0669.HK, 9888.HK, 0857.HK,
+              0386.HK, 2628.HK, 0175.HK, 9868.HK, 2015.HK, 0981.HK]
+  korea_taiwan_equity_extra:
+    asset_class: equity
+    region: AsiaPacific
+    tickers: [005380.KS, 035420.KS, 051910.KS, 373220.KS, 207940.KS, 105560.KS, 012450.KS,
+              035720.KS, 000270.KS, 055550.KS, 329180.KS,
+              2317.TW, 2454.TW, 2308.TW, 2382.TW, 2881.TW, 3711.TW, 2412.TW, 2891.TW]
+  india_equity_extra:
+    asset_class: equity
+    region: AsiaPacific
+    tickers: [BHARTIARTL.NS, SBIN.NS, LT.NS, ITC.NS, HINDUNILVR.NS, BAJFINANCE.NS, MARUTI.NS,
+              SUNPHARMA.NS, AXISBANK.NS, KOTAKBANK.NS, ASIANPAINT.NS, TITAN.NS, "M&M.NS", NTPC.NS,
+              ADANIENT.NS, HCLTECH.NS, ULTRACEMCO.NS, WIT]
+  oceania_sg_equity_extra:
+    asset_class: equity
+    region: AsiaPacific
+    tickers: [NAB.AX, ANZ.AX, MQG.AX, WES.AX, WOW.AX, FMG.AX, RIO.AX, WDS.AX, TLS.AX, GMG.AX,
+              XRO.AX, WTC.AX, NST.AX, REA.AX, O39.SI, U11.SI, Z74.SI, C6L.SI]
+
+  # ──────────────────────────────── CANADA / EMERGING MARKETS ────────────────────────────────
+  canada_equity:
+    asset_class: equity
+    region: Canada
+    tickers: [RY.TO, TD.TO, BMO.TO, BNS.TO, CM.TO, ENB.TO, CNQ.TO, SU.TO, CP.TO, CNR.TO, BN.TO,
+              TRI.TO, ATD.TO, CSU.TO, NTR.TO, ABX.TO, AEM.TO, WCN.TO, MFC.TO, L.TO, WPM.TO, FNV.TO]
+  emerging_equity:
+    asset_class: equity
+    region: Emerging
+    tickers: [VALE, PBR, ITUB, NU, MELI, BABA, PDD, JD, BIDU, AMX, SQM, FMX, NTES,
+              BBD, ABEV, CIB, BAP, GGAL, YPF, PAM, EC, TCOM, LI, NIO, XPEV, BEKE, YUMC, ZTO,
+              TME, VIPS, 2222.SR, NPN.JO, KSPI, CEPU]
+
+  # ──────────────────────────────────── EQUITY ETFS ────────────────────────────────────
+  equity_etf_regions:
+    asset_class: equity_etf
+    region: Global
+    tickers: [SPY, QQQ, IWM, MDY, EFA, EEM, VGK, EWJ, EWG, EWQ, EWI, EWU, EWP, EWL, EWN,
+              EWC, EWA, EWH, EWS, EWT, EWY, EWZ, EWW, INDA, MCHI, FXI, KWEB, EZA, TUR, EIDO,
+              THD, EPOL, ARGT, VNM, ACWI, VT,
+              EWD, EDEN, NORW, EFNL, EWO, EWK, EIRL, GREK, ENZL, EPHE, ECH, EPU, EWM, EIS,
+              KSA, UAE, QAT, ASHR, CQQQ, EMXC, IEMG, VWO, VEA, IEFA, SCZ, EWX, URTH, IOO,
+              DIA, VTI, ITOT, VXUS, FEZ, EZU, HEDJ, DXJ, DBEF, FLJP, FLGB, FLIN]
+  equity_etf_ucits:        # UCITS ETFs available to EU retail investors (Borsa Italiana / Xetra)
+    asset_class: equity_etf
+    region: Global
+    tickers: [SWDA.MI, CSSPX.MI, EIMI.MI, CSNDX.MI, IMEU.MI, VWCE.DE, SXR8.DE, EXSA.DE, XDWD.DE,
+              VUSA.MI, EXS1.DE, CSEMU.MI, SMEA.MI, IWDA.AS, ISAC.L]
+  equity_etf_sectors:
+    asset_class: equity_etf
+    region: US
+    tickers: [XLK, XLF, XLV, XLE, XLI, XLY, XLP, XLU, XLB, XLRE, XLC,
+              SMH, SOXX, IBB, XBI, ITA, KRE, XHB, XRT, TAN, ICLN, URA, LIT, CIBR, BOTZ, PAVE,
+              IGV, KBE, IAI, KIE, XOP, OIH, XES, XME, ITB, IHI, XPH, JETS, XAR, SHLD, SLX]
+  equity_etf_sectors_global:
+    asset_class: equity_etf
+    region: Global
+    tickers: [IXN, IXJ, IXG, IXC, KXI, MXI, RXI, EXI, JXI, IXP]
+  equity_etf_thematic:
+    asset_class: equity_etf
+    region: Global
+    tickers: [ARKK, ARKG, ARKX, HACK, SKYY, CLOU, FINX, ROBO, AIQ, QTUM, UFO, DRIV, GRID, FAN,
+              PHO, CGW, ESPO, SOCL, IBUY, NLR, URNM, REMX, GNOM, BLOK, WCLD, IPAY]
+  equity_etf_factors:
+    asset_class: equity_etf
+    region: US
+    tickers: [USMV, SPLV, QUAL, MTUM, VLUE, SIZE, VIG, SCHD, NOBL, RSP, IWD, IWF, VBR, AVUV,
+              SPHQ, DGRO, VYM, HDV, DVY, COWZ, FNDX, PRF, SPMO, SPYG, SPYV, IJR, IJH, VB, VTV,
+              VUG, MOAT, QQQE, IWN, IWO, VOE, VOT, DSTL, CALF]
+  equity_etf_factors_intl:
+    asset_class: equity_etf
+    region: Global
+    tickers: [EFAV, EEMV, ACWV, IQLT, IMTM, IVLU, FNDF, FNDE, AVDV, AVEM, DLS, DGS, IDV, VYMI]
+
+  # ───────────────────────────────────── BONDS ─────────────────────────────────────
+  bonds_government:
+    asset_class: bond
+    region: Global
+    tickers: [SHY, IEI, IEF, TLH, TLT, EDV, GOVT, BIL, SGOV, TIP, STIP, SCHP, BWX, IGOV, BNDX,
+              ZROZ, VGLT, VGIT, VGSH, SCHR, SCHO, VTIP, LTPZ, USFR, TFLO, WIP, IAGG, ISHG, BSV, BIV, BLV]
+  bonds_government_ucits:  # euro-area government bonds (UCITS)
+    asset_class: bond
+    region: Europe
+    tickers: [IBGS.MI, IBGM.MI, IBGL.MI, EUNH.DE, SXRQ.DE, IBCI.MI, XGLE.DE, X13E.DE]
+  bonds_credit:
+    asset_class: bond
+    region: Global
+    tickers: [AGG, BND, LQD, VCIT, VCSH, IGIB, HYG, JNK, SHYG, ANGL, BKLN, SRLN, EMB, PCY,
+              EMLC, MUB, MBB, CWB, FLOT, PFF,
+              VCLT, IGLB, SPIB, SPSB, USHY, SJNK, FALN, EMHY, HYEM, LEMB, CEMB, EBND, MINT,
+              JPST, NEAR, FLRN, VTEB, HYD, SUB, TFI, JAAA, CLOI, VMBS, IHY]
+  bonds_credit_ucits:
+    asset_class: bond
+    region: Europe
+    tickers: [IEAC.MI, IHYG.MI, IEAG.MI, AGGH.MI, SE15.MI]
+
+  # ──────────────────────────────── COMMODITIES / REAL ESTATE ────────────────────────────────
+  commodities:
+    asset_class: commodity
+    region: Global
+    tickers: [GLD, IAU, SLV, PPLT, PALL, GDX, GDXJ, USO, BNO, UNG, DBC, PDBC, GSG, DBA,
+              CORN, WEAT, SOYB, CPER, DBB, COPX, WOOD, MOO,
+              SGOL, SIVR, BAR, GLDM, SIL, SILJ, PICK, UGA, CANE, BCI, COMT, CMDY, FTGC, KRBN,
+              HAP, GUNR, GNR, DBE, DBO, DBP, USCI]
+  futures_continuous:      # Yahoo continuous futures (signals only, never bought)
+    asset_class: commodity
+    region: Global
+    tickers: ["GC=F", "SI=F", "HG=F", "CL=F", "BZ=F", "NG=F", "ZC=F", "ZW=F", "ZS=F", "KC=F",
+              "CC=F", "SB=F", "CT=F", "LE=F", "PL=F"]
+  real_estate:
+    asset_class: real_estate
+    region: Global
+    tickers: [VNQ, VNQI, REM, IYR, RWX, INDS,
+              REET, SCHH, RWR, USRT, ICF, MORT, SRVR, REZ, IFGL, HAUZ, KBWY]
+  infrastructure:
+    asset_class: infrastructure
+    region: Global
+    tickers: [IGF, NFRA, GII, IFRA, TOLZ, MLPX, AMLP, EMLP]
+
+  # ─────────────────────────────────────── CURRENCIES ───────────────────────────────────────
+  currencies:
+    asset_class: fx
+    region: Global
+    tickers: [UUP, UDN, FXE, FXY, FXF, FXB, FXA, FXC, CEW, "EURUSD=X", "USDJPY=X", "USDCHF=X", "GBPUSD=X",
+              "DX-Y.NYB", "EURGBP=X", "EURCHF=X", "EURJPY=X", "AUDUSD=X", "NZDUSD=X", "USDCAD=X",
+              "USDNOK=X", "USDSEK=X", "USDCNY=X", "USDINR=X", "USDBRL=X", "USDMXN=X", "USDZAR=X",
+              "USDTRY=X", "USDKRW=X", "USDSGD=X"]
+
+  # ──────────────────────────────── ALTERNATIVES / VOLATILITY ────────────────────────────────
+  alternatives:     # strategies historically weakly or negatively correlated with equities
+    asset_class: alternative
+    region: Global
+    tickers: [DBMF, KMLM, CTA, WTMF, TAIL, BTAL, QAI, MNA, CCOR, SWAN,
+              FMF, ASMF, RPAR, HDG, MRGR, ARB, PFIX, RISR, CAOS, FTLS, IVOL]
+  options_income:   # covered call / put write / buffer: payoff profile different from plain equities
+    asset_class: alternative
+    region: US
+    tickers: [JEPI, JEPQ, QYLD, XYLD, DIVO, PUTW, BUFR, SVOL]
+  volatility:
+    asset_class: volatility
+    region: US
+    tickers: ["^VIX", VIXY, VIXM, "^VIX3M", "^VVIX", "^MOVE", VXX, SVXY]
+
+  # ─────────────────────────────────────── CRYPTO ───────────────────────────────────────
+  crypto:
+    asset_class: crypto
+    region: Global
+    tickers: [BTC-USD, ETH-USD, SOL-USD, BNB-USD, XRP-USD, ADA-USD,
+              DOGE-USD, AVAX-USD, LINK-USD, DOT-USD, LTC-USD, BCH-USD, TRX-USD, XLM-USD,
+              HBAR-USD, NEAR-USD]
+  crypto_etf:       # crypto exposure through regulated ETFs
+    asset_class: crypto
+    region: US
+    tickers: [IBIT, FBTC, BITB, ETHA, FETH, BITO]
+  capital_efficient:   # "built-in leverage" via futures inside the ETF: more exposure per unit of capital
+    asset_class: capital_efficient
+    region: Global
+    tickers: [NTSX, NTSI, NTSE, RSSB, RSST, RSBT, GDE]
