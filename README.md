@@ -4,6 +4,8 @@ A multi-agent research pipeline for a diversified, long-only portfolio (stocks a
 
 > Research project. It produces proposals and reports; it never places orders. Not investment advice.
 
+> **Work in progress.** The project is under active development: models, parameters and results change as new experiments are validated. Numbers in this README refer to the latest full run and will be updated. See [Roadmap](#roadmap) and the [experiment log](docs/experiments.md).
+
 ![Walk-forward backtest](docs/img/backtest.png)
 
 ## Pipeline
@@ -94,6 +96,15 @@ docs/                architecture, agent documentation, experiment log
 - [Architecture and parameter reference](docs/architecture.md)
 - Agents: [data](docs/agents/data_agent.md) · [news](docs/agents/news_agent.md) · [portfolio](docs/agents/portfolio_agent.md) · [modeling](docs/agents/modeling_agent.md) · [controller](docs/agents/controller_agent.md)
 - [Experiment log](docs/experiments.md)
+
+## Roadmap
+Next steps currently planned or under evaluation:
+- revise the selection LightGBM, whose out-of-sample IC (0.021) is well below the expected-return model (0.065);
+- point-in-time index membership to remove survivorship bias from the backtest;
+- fundamentals for non-US companies;
+- map US-domiciled ETFs to UCITS equivalents investable from an EU account;
+- add the news sentiment history to the ML models once enough data has been collected;
+- feed Monte Carlo tail metrics more directly into the optimiser objective.
 
 ## Data sources
 Yahoo Finance (via `yfinance`), FRED, SEC EDGAR XBRL API, Google News RSS, Google Gemini API. Downloaded data is not redistributed in this repository; check each provider's terms of use.
